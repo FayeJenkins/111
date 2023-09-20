@@ -1,0 +1,91 @@
+import turtle
+
+# Create the game window
+window = turtle.Screen()
+window.title("Pong")
+window.bgcolor("black")
+window.setup(width=800, height=600)
+window.tracer(0)
+
+# Create the left paddle
+left_paddle = turtle.Turtle()
+left_paddle.speed(0)
+left_paddle.shape("square")
+left_paddle.color("white")
+left_paddle.shapesize(stretch_wid=6, stretch_len=1)
+left_paddle.penup()
+left_paddle.goto(-350, 0)
+
+# Create the right paddle
+right_paddle = turtle.Turtle()
+right_paddle.speed(0)
+right_paddle.shape("square")
+right_paddle.color("white")
+right_paddle.shapesize(stretch_wid=6, stretch_len=1)
+right_paddle.penup()
+right_paddle.goto(350, 0)
+
+# Create the ball
+ball = turtle.Turtle()
+ball.speed(40)
+ball.shape("square")
+ball.color("white")
+ball.penup()
+ball.goto(0, 0)
+ball.dx = 0.2
+ball.dy = 0.2
+
+# Move the left paddle up
+def paddle_left_up():
+    y = left_paddle.ycor()
+    y += 20
+    left_paddle.sety(y)
+
+# Move the left paddle down
+def paddle_left_down():
+    y = left_paddle.ycor()
+    y -= 20
+    left_paddle.sety(y)
+
+# Move the right paddle up
+def paddle_right_up():
+    y = right_paddle.ycor()
+    y += 20
+    right_paddle.sety(y)
+
+# Move the right paddle down
+def paddle_right_down():
+    y = right_paddle.ycor()
+    y -= 20
+    right_paddle.sety(y)
+
+# Keyboard bindings
+window.listen()
+window.onkeypress(paddle_left_up, "w")
+window.onkeypress(paddle_left_down, "s")
+window.onkeypress(paddle_right_up, "Up")
+window.onkeypress(paddle_right_down, "Down")
+
+# Game loop
+while True:
+    window.update()
+
+    # Move the ball
+    ball.setx(ball.xcor() + ball.dx)
+    ball.sety(ball.ycor() + ball.dy)
+
+    # Check for border collision
+    if ball.ycor() > 290:
+        ball.sety(290)
+        ball.dy *= -1
+    elif ball.ycor() < -290:
+        ball.sety(-290)
+        ball.dy *= -1
+
+    # Check for paddle collision
+    if ball.xcor() > 340 and (ball.ycor() < right_paddle.ycor() + 50 and ball.ycor() > right_paddle.ycor() - 50):
+        ball.setx(340)
+        ball.dx *= -1
+    elif ball.xcor() < -340 and (ball.ycor() < left_paddle.ycor() + 50 and ball.ycor() > left_paddle.ycor() - 50):
+        ball.setx(-340)
+        ball.dx *= -1
